@@ -26,8 +26,7 @@ async def on_ready():
     timestamp = int(time.time())
     embed = disnake.Embed(
         title="Бот онлайн!",
-        description=f"Бот запущен <t:{timestamp}:R>",
-        color=None
+        description=f"Бот был запущен <t:{timestamp}:R>"
     )
     embed.set_footer(text=f"Время запуска: {start_time}")
     await channel.send(embed=embed)
@@ -74,5 +73,15 @@ for filename in os.listdir("cogs"):
             bot.load_extension(f"cogs.{filename[:-3]}")
         except Exception as e:
             print(f"Ошибка загрузки {filename}: {e}")
+
+for root, dirs, files in os.walk("cogs"):
+    for file in files:
+        if file.endswith(".py") and file != "__init__.py":
+            path = os.path.join(root, file).replace(os.sep, ".")[:-3]
+            try:
+                bot.load_extension(path)
+                print(f"✅ Загружен модуль: {path}")
+            except Exception as e:
+                print(f"❌ Ошибка загрузки {path}: {e}")
 
 bot.run(API_KEY)
